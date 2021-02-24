@@ -1,0 +1,48 @@
+pkgname=dmenu
+pkgver=5.0
+pkgrel=1
+pkgdesc="A generic menu for X"
+url="https://tools.suckless.org/dmenu"
+arch=('i686' 'x86_64')
+license=('MIT')
+depends=('libx11' 'libxinerama' 'libxft' 'yajl')
+makedepends=('git' 'make')
+optdepends=('polybar-dwm-module: polybar with dwm module')
+source=(
+		https://dl.suckless.org/tools/$pkgname-$pkgver.tar.gz
+		#dmenu::git://git.suckless.org/dmenu
+		config.h
+		)
+_patches=(
+		buildfix.diff
+		fuzzymatch.diff
+		mousesupport.diff
+		xresources.diff
+		lineheight.diff
+		)
+source=(${source[@]} ${_patches[@]})
+md5sums=(
+		'SKIP'
+		'SKIP'
+		'SKIP'
+		'SKIP'
+		'SKIP'
+		'SKIP'
+		'SKIP'
+		)
+
+build() {
+	cd $pkgname-$pkgver
+	for p in "${_patches[@]}"; do
+		echo "=> $p"
+		patch -p1 < ../$p || return 1
+	done
+	cp -R $srcdir/config.h config.def.h
+	#cp $srcdir/config.mk config.mk
+	make
+}
+
+package() {
+	cd $pkgname-$pkgver
+	make PREFIX=/usr DESTDIR=$pkgdir install
+}
