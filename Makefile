@@ -42,11 +42,9 @@ dist: clean
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp -f dmenu dmenu_path dmenu_run stest $(DESTDIR)$(PREFIX)/bin
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_path
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_run
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/stest
+	install -Dm755 dmenu dmenu_path dmenu_run stest $(DESTDIR)$(PREFIX)/bin
+	install -Dm644 LICENSE ${DESTDIR}${PREFIX}/share/licenses/dmenu/LICENSE
+	install -Dm644 README ${DESTDIR}${PREFIX}/share/doc/dmenu/README
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	sed "s/VERSION/$(VERSION)/g" < dmenu.1 > $(DESTDIR)$(MANPREFIX)/man1/dmenu.1
 	sed "s/VERSION/$(VERSION)/g" < stest.1 > $(DESTDIR)$(MANPREFIX)/man1/stest.1
@@ -60,5 +58,7 @@ uninstall:
 		$(DESTDIR)$(PREFIX)/bin/stest\
 		$(DESTDIR)$(MANPREFIX)/man1/dmenu.1\
 		$(DESTDIR)$(MANPREFIX)/man1/stest.1
+	rm -rf $(DESTDIR)$(PREFIX)/share/licenses/dmenu\
+		$(DESTDIR)$(PREFIX)/share/doc/dmenu
 
 .PHONY: all options clean dist install uninstall
