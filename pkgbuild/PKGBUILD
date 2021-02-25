@@ -1,3 +1,4 @@
+# Maintainer: Carneiro <gabriel.chaves.carneiro@gmail.com>
 pkgname=dmenu
 pkgver=5.0
 pkgrel=1
@@ -5,12 +6,10 @@ pkgdesc="A generic menu for X"
 url="https://tools.suckless.org/dmenu"
 arch=('i686' 'x86_64')
 license=('MIT')
-depends=('libx11' 'libxinerama' 'libxft' 'yajl')
-makedepends=('git' 'make')
-optdepends=('polybar-dwm-module: polybar with dwm module')
+depends=('libx11')
+makedepends=('make')
 source=(
 		https://dl.suckless.org/tools/$pkgname-$pkgver.tar.gz
-		#dmenu::git://git.suckless.org/dmenu
 		config.h
 		)
 _patches=(
@@ -21,24 +20,23 @@ _patches=(
 		lineheight.diff
 		)
 source=(${source[@]} ${_patches[@]})
-md5sums=(
-		'SKIP'
-		'SKIP'
-		'SKIP'
-		'SKIP'
-		'SKIP'
-		'SKIP'
-		'SKIP'
-		)
+sha256sums=(
+'fe18e142c4dbcf71ba5757dbbdea93b1c67d58fc206fc116664f4336deef6ed3'
+'SKIP'
+'bc552ea994712b8b10110806cb5f7ab65d7f42a5770ce9700e59501435b71bc0'
+'d9a1e759cd518348fc37c2c83fbd097232098562ebfd1edf85b51413ff524b79'
+'690daaf24d4379f9ed4dbc1d7f7864a86fada420afc6ef792d9e2d09bd6fe8b6'
+'75b884e26c959f396676110eb5e0b74bdec43b1cb9424950f08cc641e6fb63d6'
+'cbb6c13f61a24d4ed712be6cb58a69b2dcab5aa4641718dba7eb6b50927f616e'
+)
 
 build() {
 	cd $pkgname-$pkgver
-	for p in "${_patches[@]}"; do
-		echo "=> $p"
-		patch -p1 < ../$p || return 1
+	for patch in "${_patches[@]}"; do
+		echo "=> $patch"
+		patch -p1 < ../$patch || return 1
 	done
 	cp -R $srcdir/config.h config.def.h
-	#cp $srcdir/config.mk config.mk
 	make
 }
 
